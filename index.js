@@ -24,7 +24,7 @@ const fetchNews = async () => {
 				image: article.urlToImage,
 				description: article.description,
 			}));
-
+		//console.log(news);
 		return news;
 	} catch (error) {
 		console.error('Error fetching news:', error.message);
@@ -32,4 +32,4 @@ const fetchNews = async () => {
 	}
 };
 
-fetchNews().then((news) => console.log(news));
+fetchNews();
