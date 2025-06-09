@@ -1,11 +1,13 @@
+const cron = require('node-cron');
 const { DateTime } = require('luxon');
 const axios = require('axios');
 
 const API_KEY = '30e721f371c447a1b370110f0f8f20c9';
 const URL = 'https://newsapi.org/v2/everything';
-const DATE = DateTime.now().minus({ days: 1 }).toISODate();
 
 const fetchNews = async () => {
+	const DATE = DateTime.now().minus({ days: 1 }).toISODate();
+
 	try {
 		const response = await axios.get(URL, {
 			params: {
@@ -24,7 +26,9 @@ const fetchNews = async () => {
 				image: article.urlToImage,
 				description: article.description,
 			}));
-		//console.log(news);
+
+		console.log(`[${new Date().toLocaleString()}] News fetched successfully.`);
+		// console.log(news); // You can remove or store it instead
 		return news;
 	} catch (error) {
 		console.error('Error fetching news:', error.message);
@@ -32,10 +36,15 @@ const fetchNews = async () => {
 	}
 };
 
+cron.schedule('0 8 * * *', async () => {
+	try {
+		await fetchNews();
+	} catch (err) {
+		console.error('Cron job error:', err.message);
+	}
+});
+
 // (async () => {
 // 	const news = await fetchNews();
 // 	console.log(news);
 // })();
-
-fetchNews();
-
