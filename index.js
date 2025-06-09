@@ -18,7 +18,7 @@ const fetchNews = async () => {
 
 		const news = response.data.articles
 			.filter((article) => article.urlToImage && article.description)
-			.slice(0, 3)
+			.slice(0, 6)
 			.map((article) => ({
 				title: article.title,
 				image: article.urlToImage,
@@ -32,4 +32,10 @@ const fetchNews = async () => {
 	}
 };
 
+// (async () => {
+// 	const news = await fetchNews();
+// 	console.log(news);
+// })();
+
 fetchNews();
+
