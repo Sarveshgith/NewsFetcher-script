@@ -1,6 +1,11 @@
 const cron = require('node-cron');
 const { DateTime } = require('luxon');
 const axios = require('axios');
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
 
 const API_KEY = '30e721f371c447a1b370110f0f8f20c9';
 const URL = 'https://newsapi.org/v2/everything';
@@ -28,7 +33,6 @@ const fetchNews = async () => {
 			}));
 
 		console.log(`[${new Date().toLocaleString()}] News fetched successfully.`);
-		// console.log(news); // You can remove or store it instead
 		return news;
 	} catch (error) {
 		console.error('Error fetching news:', error.message);
@@ -44,7 +48,26 @@ cron.schedule('0 8 * * *', async () => {
 	}
 });
 
+app.get('/', (req, res) => {
+	res.send('Health = OK');
+});
+
+app.get('/news', async (req, res) => {
+	try {
+		const news = await fetchNews();
+		res.json(news);
+	} catch (error) {
+		res.status(500).json({ error: 'Failed to fetch news' });
+	}
+});
+
 // (async () => {
 // 	const news = await fetchNews();
 // 	console.log(news);
 // })();
+
+app.listen(PORT, () => {
+	console.log(`News API server is running on http://localhost:${PORT}`);
+	console.log(`Health check: http://localhost:${PORT}/`);
+	console.log(`News endpoint: http://localhost:${PORT}/news`);
+});
