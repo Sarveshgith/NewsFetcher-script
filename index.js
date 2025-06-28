@@ -22,14 +22,15 @@ const fetchNews = async () => {
 				apiKey: API_KEY,
 			},
 		});
-
+		//console.log(response.data.articles);
 		const news = response.data.articles
-			.filter((article) => article.urlToImage && article.description)
+			.filter((article) => article.urlToImage && article.description && article.url)
 			.slice(0, 6)
 			.map((article) => ({
 				title: article.title,
 				image: article.urlToImage,
 				description: article.description,
+				url: article.url,
 			}));
 
 		console.log(`[${new Date().toLocaleString()}] News fetched successfully.`);
